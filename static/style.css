@@ -1,0 +1,118 @@
+/* style.css */
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+.header {
+  text-align: center;
+  margin: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #333;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.business {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 8px;
+  width: 200px;
+}
+
+.business-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.sidebar {
+  position: absolute;
+  right: 20px;
+  top: 50px;
+  width: 200px;
+  text-align: center;
+  background-color: #e3e3e3;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.sidebar h2 {
+  font-size: 18px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.business-click-button {
+  background-color: #FF9800;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.business-click-button:hover {
+  background-color: #e68900;
+}
+
+/* style.css */
+
+.locked {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.unlock-info {
+  color: red;
+  font-weight: bold;
+}
+
+/* style.css */
+
+.upgrade-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.upgrade-button:hover {
+  background-color: #45a049;
+}

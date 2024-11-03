@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicker Game UI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="header">
+    <h1>Current Money: <span id="money"></span></h1>
+    <p>Income: <span id="income">$0</span>/sec</p>
+  </div>
+
+  <div class="main">
+    <!-- Business 1: Lemonade Stand (unlocked by default) -->
+    <div class="business" id="lemonade">
+      <button onclick="earnMoney('lemonade')" class="business-click-button">Lemonade Stand</button>
+      <button onclick="upgradeBusiness('lemonade')" class="upgrade-button">Upgrade - $10</button>
+      <p>Income per click: $1</p>
+    </div>
+
+    <!-- Business 2: Newspaper Delivery (locked initially) -->
+    <div class="business locked" id="newspaper">
+      <button onclick="earnMoney('newspaper')" class="business-click-button" disabled>Newspaper Delivery</button>
+      <button onclick="upgradeBusiness('newspaper')" class="upgrade-button" disabled>Upgrade - $50</button>
+      <p>Income per click: $5</p>
+      <p class="unlock-info">Unlock for $100</p>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h2>Upgrades</h2>
+    <div id="upgrade-list"></div> <!-- Upgrade buttons will be appended here -->
+  </div>
+
+  <div class="footer">
+    <p>Achievements Unlocked: 0 | Goal: Reach $1000!</p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
