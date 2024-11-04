@@ -8,7 +8,7 @@
       "unlocked": true,
       "unlockCost": 0,
       "owned": 1,
-      "initialSpeed": 10000,
+      "speed": 2000,
       "manager": {
         "name": "Lemonade Stand Manager",
         "cost": 100
@@ -22,7 +22,7 @@
     "unlocked": false,
     "unlockCost": 100,
     "owned": 0,
-    "initialSpeed": 25000,
+    "speed": 15000,
     "manager": {
       "name": "Newspaper Delivery Manager",
       "cost": 500
@@ -34,19 +34,19 @@
       "name": "Income Multiplier",
       "type": "incomeMultiplier",
       "effect": 2.0,
-      "cost": 200
+      "cost": 50
     },
     {
       "name": "Cost Reduction",
       "type": "costReduction",
       "effect": 0.1,
-      "cost": 300
+      "cost": 100
     },
     {
       "name": "Speed Boost",
       "type": "speedBoost",
       "effect": 0.9,
-      "cost": 300
+      "cost": 125
     }
   ]
 }

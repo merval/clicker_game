@@ -3,82 +3,8 @@
 let money = 0;
 let incomePerSec = 0;
 let upgrades = [];
-
-
 let businesses = {};
 const businessesClickable = {};
-
-// Fetch businesses data from JSON file
-async function loadGameData() {
-  try {
-    const response = await fetch("static/businesses.json");
-    const data = await response.json();
-
-    businesses = data.businesses.reduce((obj, business) => {
-      obj[business.name] = { ...business, currentSpeed: business.initialSpeed };
-      businessesClickable[business.name] = true;
-      return obj;
-    }, {});
-
-    upgrades = data.upgrades;
-
-    // Generate HTML for each business
-    generateBusinessHTML();
-    generateUpgradeHTML();
-  } catch (error) {
-    console.error("Failed to load game data:", error);
-  }
-}
-
-
-// Utility function to capitalize the first letter of a word
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Generate HTML for upgrades
-function generateUpgradeHTML() {
-  const upgradeContainer = document.getElementById("upgrade-list");
-
-  upgrades.forEach(upgrade => {
-    const upgradeButton = document.createElement("button");
-    upgradeButton.innerText = `${upgrade.name} - $${upgrade.cost}`;
-    upgradeButton.onclick = () => buyUpgrade(upgrade);
-    upgradeContainer.appendChild(upgradeButton);
-  });
-}
-
-// Function to buy a manager
-function buyManager(businessName) {
-  const business = businesses[businessName];
-  if (money >= business.manager.cost) {
-    money -= business.manager.cost;
-    business.manager.hired = true; // Mark manager as hired
-    startAutoEarning(businessName);
-    updateMoney();
-    updateBusinessDisplay(businessName);
-
-    // Hide manager button after purchase
-    document.querySelector(`#${businessName} .manager-button`).style.display = "none";
-  } else {
-    alert("Not enough money to hire the manager!");
-  }
-}
-
-// Function to start automatic income generation for a business
-function startAutoEarning(businessName) {
-  const business = businesses[businessName];
-  setInterval(() => {
-    if (business.manager && business.manager.hired) {
-      earnMoney(businessName);
-    }
-  }, 1000); // Adjust the interval for desired auto-click speed
-}
-
-// Helper functions (updateMoney, updateBusinessDisplay, etc.) go here
-
-// Load data and initialize game
-window.onload = loadGameData;
 
 // Upgrade types and possible attributes
 const upgradeTypes = [
@@ -87,10 +13,70 @@ const upgradeTypes = [
   { type: "costReduction", minEffect: 0.1, maxEffect: 0.5 }
 ];
 
+// Fetch businesses data from JSON file
+async function loadGameData() {
+  try {
+    const response = await fetch("static/businesses.json");
+    const data = await response.json();
 
-// Function to earn money with countdown progress bar and display remaining time
+    businesses = data.businesses.reduce((obj, business) => {
+      obj[business.name] = { ...business, currentSpeed: business.speed };
+      businessesClickable[business.name] = true;
+      return obj;
+    }, {});
+
+    data.upgrades.forEach(upgrade => {
+    upgrades.push(upgrade);
+    displayUpgrade(upgrade);
+  });
+
+    // Generate HTML for each business
+    generateBusinessHTML();
+    refreshUpgradeDisplay();
+  } catch (error) {
+    console.error("Failed to load game data:", error);
+  }
+}
+
+function buildUpgradeButton(upgrade, upgradeList) {
+  const upgradeButton = document.createElement("button");
+  upgradeButton.className = "upgrade-button";
+  upgradeButton.innerText = `${upgrade.name} - $${upgrade.cost}`;
+  upgradeButton.onclick = () => buyUpgrade(upgrade);
+  upgradeList.appendChild(upgradeButton);
+}
+
+// Utility function to capitalize the first letter of a word
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function buyManager(businessName) {
+  const business = businesses[businessName];
+  if (money >= business.manager.cost) {
+    money -= business.manager.cost;
+    business.manager.hired = true;
+    startAutoEarning(businessName);
+    updateMoney();
+    updateBusinessDisplay(businessName);
+    document.querySelector(`#${businessName} .manager-button`).style.display = "none";
+    document.querySelector(`#${businessName} .earn-income`).style.display = "none";
+  }
+}
+
+function startAutoEarning(businessName) {
+  const business = businesses[businessName];
+  setInterval(() => {
+    if (business.manager && business.manager.hired) {
+      earnMoney(businessName);
+    }
+  }, 500);
+}
+
+// Function to start earning money with countdown and delayed money update
 function earnMoney(businessName) {
   const business = businesses[businessName];
+  business.owned = 1
   const progressBar = document.querySelector(`#${businessName} .progress-bar`);
   const progressText = document.querySelector(`#${businessName} .progress-text`);
 
@@ -98,10 +84,6 @@ function earnMoney(businessName) {
   if (businessesClickable[businessName]) {
     // Set button as not clickable
     businessesClickable[businessName] = false;
-
-    // Update money
-    money += business.income;
-    updateMoney();
 
     // Start the countdown with progress bar animation
     let remainingTime = business.currentSpeed;
@@ -118,16 +100,20 @@ function earnMoney(businessName) {
       const secondsLeft = ((totalTicks - tick) * intervalTime) / 1000;
       progressText.innerText = `${secondsLeft.toFixed(1)}s`; // Display remaining time
 
-      // When the countdown finishes, reset the progress bar and make button clickable
+      // When the countdown finishes, update money, reset progress bar, and make button clickable
       if (tick >= totalTicks) {
         clearInterval(interval);
         progressBar.style.width = '0%'; // Reset progress bar
         progressText.innerText = ''; // Clear countdown text
-        businessesClickable[businessName] = true; // Make button clickable again
+
+        // Add income to money only after countdown completes
+        money += business.income;
+        updateMoney();
+
+        // Make button clickable again
+        businessesClickable[businessName] = true;
       }
     }, intervalTime);
-  } else {
-    alert("Please wait until the progress bar finishes before clicking again!");
   }
 }
 
@@ -145,7 +131,7 @@ function generateBusinessHTML() {
     businessElement.innerHTML = `
       <h3>${capitalizeFirstLetter(business.name)}</h3>
       <p>Income per click: $${business.income.toFixed(2)}</p>
-      <button class="business-click-button" onclick="earnMoney('${business.name}')" ${business.unlocked ? "" : "disabled"}>
+      <button class="earn-income" onclick="earnMoney('${business.name}')" ${business.unlocked ? "" : "disabled"}>
         Earn Income
       </button>
       <div class="progress-container">
@@ -166,7 +152,6 @@ function generateBusinessHTML() {
   });
 }
 
-
 // Function to upgrade a business
 function upgradeBusiness(businessType) {
   const business = businesses[businessType];
@@ -176,8 +161,6 @@ function upgradeBusiness(businessType) {
     business.upgradeCost = Math.floor(business.upgradeCost * 1.5); // Increase upgrade cost by 50%
     updateMoney();
     updateBusinessDisplay(businessType);
-  } else {
-    alert("Not enough money to upgrade!");
   }
 }
 
@@ -213,6 +196,7 @@ function checkForUnlocks() {
 function lockBusiness(businessType) {
   const business = businesses[businessType];
   business.unlocked = false;
+  businessesClickable[business] = false;
 
   const businessElement = document.getElementById(businessType);
   businessElement.classList.add("locked");
@@ -221,15 +205,15 @@ function lockBusiness(businessType) {
   businessElement.querySelector(".unlock-info").style.display = `Unlock for $${business.unlockCost}`;
 }
 
-
 // Function to unlock a business
 function unlockBusiness(businessType) {
   const business = businesses[businessType];
   business.unlocked = true;
+  businessesClickable[business] = true;
 
   const businessElement = document.getElementById(businessType);
   businessElement.classList.remove("locked");
-  businessElement.querySelector(".business-click-button").disabled = false;
+  businessElement.querySelector(".earn-income").disabled = false;
   businessElement.querySelector(".upgrade-button").disabled = false;
   businessElement.querySelector(".unlock-info").style.display = "none";
 }
@@ -240,7 +224,7 @@ function generateUpgradeName(type, effect) {
     case "incomeMultiplier":
       return `Profit Multiplier x${effect}`;
     case "passiveIncomeBoost":
-      return `Passive Boost +${effect} income/sec`;
+      return `Passive Boost +$${effect} income/sec`;
     case "costReduction":
       return `Efficiency Boost -${(effect * 100).toFixed(0)}% Cost`;
     default:
@@ -273,6 +257,7 @@ function buyUpgrade(upgrade) {
     if (upgrade.type === "incomeMultiplier") {
       for (const business in businesses) {
         businesses[business].income *= upgrade.effect;
+        updateBusinessDisplay(business)
       }
     } else if (upgrade.type === "passiveIncomeBoost") {
       incomePerSec += upgrade.effect;
@@ -297,32 +282,33 @@ function refreshUpgradeDisplay() {
   const upgradeList = document.getElementById("upgrade-list");
   upgradeList.innerHTML = ""; // Clear existing upgrades
 
-  // Re-display available upgrades
   upgrades.forEach(upgrade => {
-    const upgradeButton = document.createElement("button");
-    upgradeButton.innerText = `${upgrade.name} - $${upgrade.cost}`;
-    upgradeButton.onclick = () => buyUpgrade(upgrade);
-    upgradeList.appendChild(upgradeButton);
+    buildUpgradeButton(upgrade, upgradeList);
   });
 }
 
-// Display an upgrade in the sidebar (same as before)
 function displayUpgrade(upgrade) {
   const upgradeList = document.getElementById("upgrade-list");
-  const upgradeButton = document.createElement("button");
-  upgradeButton.innerText = `${upgrade.name} - $${upgrade.cost}`;
-  upgradeButton.onclick = () => buyUpgrade(upgrade);
-  upgradeList.appendChild(upgradeButton);
+  buildUpgradeButton(upgrade, upgradeList);
+  sortUpgradesByCost();
 }
 
-// Initial upgrades
-for (let i = 0; i < 3; i++) {
-  generateUpgrade();
-}
+// // Initial upgrades
+// for (let i = 0; i < 10; i++) {
+//   generateUpgrade();
+// }
 
 // Initial upgrades and intervals for passive income
 setInterval(() => {
   money += incomePerSec;
   updateMoney();
   checkForUnlocks();
-}, 1000);
+}, 500);
+
+// Sort upgrades by cost in ascending order
+function sortUpgradesByCost() {
+  upgrades.sort((a, b) => a.cost - b.cost);
+}
+
+// Load data and initialize game
+window.onload = loadGameData;

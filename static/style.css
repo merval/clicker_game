@@ -73,7 +73,7 @@ body {
   color: #555;
 }
 
-.business-click-button {
+.earn-income {
   background-color: #FF9800;
   color: white;
   border: none;
@@ -84,7 +84,7 @@ body {
   border-radius: 5px;
 }
 
-.business-click-button:hover {
+.earn-income:hover {
   background-color: #e68900;
 }
 
@@ -132,11 +132,12 @@ body {
 
 .progress-container {
   width: 100%;
-  height: 10px;
+  height: 20px;
   background-color: #ddd;
   border-radius: 5px;
   overflow: hidden;
   margin-top: 10px;
+  position: relative; /* Make container relative for absolute positioning */
 }
 
 .progress-bar {
@@ -144,6 +145,7 @@ body {
   width: 0%;
   background-color: #4caf50;
   transition: width 0.1s linear; /* Smooth fill */
+  position: relative;
 }
 
 .progress-text {
@@ -156,4 +158,19 @@ body {
   color: #fff;
   line-height: 20px; /* Center text vertically */
   font-size: 0.9em;
+}
+
+.upgrade-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.upgrade-button:hover {
+  background-color: #45a049;
 }
