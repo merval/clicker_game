@@ -1,0 +1,52 @@
+{
+  "businesses": [
+    {
+      "name": "lemonade",
+      "cost": 10,
+      "income": 1.0,
+      "upgradeCost": 10,
+      "unlocked": true,
+      "unlockCost": 0,
+      "owned": 1,
+      "initialSpeed": 10000,
+      "manager": {
+        "name": "Lemonade Stand Manager",
+        "cost": 100
+      }
+  },
+  {
+    "name": "newspaper",
+    "cost": 50,
+    "income": 5.0,
+    "upgradeCost": 50,
+    "unlocked": false,
+    "unlockCost": 100,
+    "owned": 0,
+    "initialSpeed": 25000,
+    "manager": {
+      "name": "Newspaper Delivery Manager",
+      "cost": 500
+    }
+  }
+  ],
+  "upgrades": [
+    {
+      "name": "Income Multiplier",
+      "type": "incomeMultiplier",
+      "effect": 2.0,
+      "cost": 200
+    },
+    {
+      "name": "Cost Reduction",
+      "type": "costReduction",
+      "effect": 0.1,
+      "cost": 300
+    },
+    {
+      "name": "Speed Boost",
+      "type": "speedBoost",
+      "effect": 0.9,
+      "cost": 300
+    }
+  ]
+}

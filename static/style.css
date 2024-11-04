@@ -100,8 +100,6 @@ body {
   font-weight: bold;
 }
 
-/* style.css */
-
 .upgrade-button {
   background-color: #4CAF50;
   color: white;
@@ -115,4 +113,47 @@ body {
 
 .upgrade-button:hover {
   background-color: #45a049;
+}
+
+.manager-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.manager-button:hover {
+  background-color: #45a049;
+}
+
+.progress-container {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #4caf50;
+  transition: width 0.1s linear; /* Smooth fill */
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  line-height: 20px; /* Center text vertically */
+  font-size: 0.9em;
 }
